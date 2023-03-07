@@ -35,12 +35,17 @@ chmod 400 /root/.ssh/id_rsa
 git config --global --add safe.directory ${GITHUB_WORKSPACE}
 cd ${GITHUB_WORKSPACE}
 
-git clone --recurse-submodules "git@github.com:${GITHUB_REPOSITORY}.git" site && \
+git clone --recurse-submodules "git@github.com:${GITHUB_REPOSITORY}.git" site
+
 cd site
 
 hugo --gc --minify --cleanDestinationDir
 
-cd public
+git clone "git@github.com:${DEPLOY_REPO}.git"
+
+mv public/* ${DEPLOY_REPO}
+
+cd ${DEPLOY_REPO}
 git add .
 git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
 git push origin $DEPLOY_BRANCH
