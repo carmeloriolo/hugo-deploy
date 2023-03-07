@@ -44,12 +44,15 @@ hugo --gc --minify --cleanDestinationDir
 git clone "git@github.com:${DEPLOY_REPO}.git" gh_pages_repo
 
 for i in $(ls public); do
+  echo "Removing gh_pages_repo/${i}"
   rm -rf gh_pages_repo/${i}
+  echo "mv public/${i} gh_pages_repo/${i}"
   mv public/${i} gh_pages_repo/${i}
 done;
 
 
 cd gh_pages_repo
+git status
 git add .
 git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
 git push origin $DEPLOY_BRANCH
