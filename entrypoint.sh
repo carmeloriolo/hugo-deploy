@@ -41,7 +41,7 @@ cd site
 hugo --gc --minify --cleanDestinationDir
 
 cd public
-
+git add .
 git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
 git push origin $DEPLOY_BRANCH
 
