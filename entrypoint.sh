@@ -25,8 +25,6 @@ git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
 # https://github.com/reuixiy/hugo-theme-meme/issues/27
 git config --global core.quotePath false
 
-ln -s /usr/share/zoneinfo/${TZ} /etc/localtime
-
 mkdir --parents /root/.ssh
 ssh-keyscan -t rsa github.com > /root/.ssh/known_hosts && \
 echo "${DEPLOY_KEY}" > /root/.ssh/id_rsa && \
@@ -36,25 +34,23 @@ git config --global --add safe.directory ${GITHUB_WORKSPACE}
 cd ${GITHUB_WORKSPACE}
 
 git clone --recurse-submodules "git@github.com:${GITHUB_REPOSITORY}.git" site
-
-cd site
-
-hugo --gc --minify --cleanDestinationDir
-
 git clone "git@github.com:${DEPLOY_REPO}.git" gh_pages_repo
 
-for i in $(ls public); do
+pushd site && hugo --gc --minify --cleanDestinationDir && popd
+
+for i in $(ls site/public); do
   echo "Removing gh_pages_repo/${i}"
   rm -rf gh_pages_repo/${i}
-  echo "mv public/${i} gh_pages_repo/${i}"
-  mv public/${i} gh_pages_repo/${i}
+  echo "mv site/public/${i} gh_pages_repo/${i}"
+  mv site/public/${i} gh_pages_repo/${i}
 done;
 
 
-cd gh_pages_repo
-git status
-git add .
-git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
-git push origin $DEPLOY_BRANCH
+pushd gh_pages_repo \
+&& git status \
+&& git add . \
+&& git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action" \
+&& git push origin $DEPLOY_BRANCH \
+&& popd
 
 rm -rf /root/.ssh
