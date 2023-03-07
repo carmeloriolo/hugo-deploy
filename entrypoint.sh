@@ -43,7 +43,11 @@ hugo --gc --minify --cleanDestinationDir
 
 git clone "git@github.com:${DEPLOY_REPO}.git" gh_pages_repo
 
-mv public/* gh_pages_repo
+for i in $(ls public); do
+  rm -rf gh_pages_repo/${i}
+  mv public/${i} gh_pages_repo/${i}
+done;
+
 
 cd gh_pages_repo
 git add .
