@@ -36,7 +36,7 @@ cd ${GITHUB_WORKSPACE}
 git clone --recurse-submodules "git@github.com:${GITHUB_REPOSITORY}.git" site
 git clone "git@github.com:${DEPLOY_REPO}.git" gh_pages_repo
 
-pushd site && hugo --gc --minify --cleanDestinationDir && popd
+pushd site && hugo && popd
 
 for i in $(ls site/public); do
   echo "Removing gh_pages_repo/${i}"
