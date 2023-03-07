@@ -40,13 +40,9 @@ cd site
 
 hugo --gc --minify --cleanDestinationDir
 
-pushd public \
-&& git init \
-&& git remote add origin $REMOTE_REPO \
-&& git add -A \
-&& git checkout -b $REMOTE_BRANCH \
-&& git commit -m "Automated deployment @ $(date '+%Y-%m-%d %H:%M:%S') ${TZ}" \
-&& git push -f origin $REMOTE_BRANCH \
-&& popd
+cd public
+
+git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
+git push origin $DEPLOY_BRANCH
 
 rm -rf /root/.ssh
