@@ -43,6 +43,10 @@ hugo --gc --minify --cleanDestinationDir
 
 git clone "git@github.com:${DEPLOY_REPO}.git"
 
+ls
+ls public
+ls ${DEPLOY_REPO}
+
 mv public/* ${DEPLOY_REPO}
 
 cd ${DEPLOY_REPO}
