@@ -41,15 +41,11 @@ cd site
 
 hugo --gc --minify --cleanDestinationDir
 
-git clone "git@github.com:${DEPLOY_REPO}.git"
+git clone "git@github.com:${DEPLOY_REPO}.git" gh_pages_repo
 
-ls
-ls public
-ls ${DEPLOY_REPO}
+mv public/* gh_pages_repo
 
-mv public/* ${DEPLOY_REPO}
-
-cd ${DEPLOY_REPO}
+cd gh_pages_repo
 git add .
 git diff-index --quiet HEAD || git commit -m "automatic deployment via Github Action"
 git push origin $DEPLOY_BRANCH
